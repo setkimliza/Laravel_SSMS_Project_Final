@@ -117,6 +117,12 @@ class Product extends Model
      */
     public function getImageUrlAttribute(): string
     {
+        if ($this->image && file_exists(public_path($this->image))) {
+            return asset($this->image);
+        }
+        if ($this->image && file_exists(public_path('images/' . $this->image))) {
+            return asset('images/' . $this->image);
+        }
         if ($this->image && file_exists(public_path('storage/' . $this->image))) {
             return asset('storage/' . $this->image);
         }

@@ -87,6 +87,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 10,
                 'Price' => 2.50,
                 'ExpiredDate' => Carbon::now()->addMonths(6),
+                'image' => "images/snacks/Lay's-Classic-Potato.jpg",
                 'description' => 'Crispy and savory thinly sliced potato chips sprinkled with salt.',
             ],
             [
@@ -96,6 +97,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 10,
                 'Price' => 2.99,
                 'ExpiredDate' => Carbon::now()->addMonths(4),
+                'image' => 'images/snacks/Pringles-Sabor-Original.jpg',
                 'description' => 'Crunchy tortilla chips packed with bold nacho cheese flavor.',
             ],
             [
@@ -105,6 +107,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 12,
                 'Price' => 3.49,
                 'ExpiredDate' => Carbon::now()->addMonths(8),
+                'image' => "images/snacks/Oreo-O's-Cereal.jpg",
                 'description' => 'Chocolate sandwich cookies with double vanilla creme filling.',
             ],
 
@@ -116,6 +119,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 25,
                 'Price' => 1.89,
                 'ExpiredDate' => Carbon::now()->addMonths(9),
+                'image' => 'images/drinks/Coca-Cola.jpg',
                 'description' => 'The world-famous classic sparkling refreshing cola soda drink.',
             ],
             [
@@ -125,6 +129,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 20,
                 'Price' => 1.99,
                 'ExpiredDate' => Carbon::now()->addYears(1),
+                'image' => 'images/drinks/Sprite.jpg',
                 'description' => 'Naturally pure spring mineral water directly from the French Alps.',
             ],
             [
@@ -134,6 +139,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 10,
                 'Price' => 4.20,
                 'ExpiredDate' => Carbon::now()->subDays(3), // EXPIRED test
+                'image' => 'images/fruit/orange.jpg',
                 'description' => '100% pure cold-pressed orange juice without added preservatives.',
             ],
             [
@@ -143,6 +149,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 15,
                 'Price' => 2.25,
                 'ExpiredDate' => Carbon::now()->addMonths(12),
+                'image' => 'images/drinks/Monster-Energy.jpg',
                 'description' => 'Vitalizes body and mind with taurine and B-group vitamins.',
             ],
 
@@ -154,6 +161,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 10,
                 'Price' => 4.80,
                 'ExpiredDate' => Carbon::now()->addDays(7), // EXPIRING SOON test
+                'image' => 'images/milk/Cowhead-Milk.jpg',
                 'description' => 'Pasteurized vitamin D whole milk sourced from pasture-raised cows.',
             ],
             [
@@ -163,6 +171,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 8,
                 'Price' => 5.49,
                 'ExpiredDate' => Carbon::now()->addMonths(3),
+                'image' => 'images/milk/Milk-Yogurt.jpg',
                 'description' => 'Aged naturally for over 9 months for rich, bold cheddar taste.',
             ],
             [
@@ -172,6 +181,7 @@ class DatabaseSeeder extends Seeder
                 'MinStock' => 10,
                 'Price' => 3.99,
                 'ExpiredDate' => Carbon::now()->addDays(14),
+                'image' => 'images/milk/So-Natural-White-Milk.jpg',
                 'description' => 'Thick and creamy strained Greek yogurt loaded with high protein.',
             ],
 
