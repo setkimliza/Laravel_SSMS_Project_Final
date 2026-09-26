@@ -679,6 +679,26 @@ class DatabaseSeeder extends Seeder
                 'image' => 'images/snacks/takis-hechos-ricos.jpg',
                 'description' => 'Extra-wavy crunchy potato chips drenched in explosive hot chili lime seasoning.',
             ],
+            [
+                'PName' => 'Kinder Bueno Crispy Hazelnut Wafer (Pack of 2)',
+                'CatID' => $categories['Snacks']->CatID,
+                'Qty' => 30,
+                'MinStock' => 10,
+                'Price' => 2.49,
+                'ExpiredDate' => Carbon::now()->addMonths(8),
+                'image' => 'images/snacks/Bueno-packet.jpg',
+                'description' => 'Crispy hazelnut cream-filled wafers enrobed in delicate milk chocolate.',
+            ],
+            [
+                'PName' => 'Milka Choco Cookie with Alpine Milk Chocolate',
+                'CatID' => $categories['Snacks']->CatID,
+                'Qty' => 25,
+                'MinStock' => 8,
+                'Price' => 3.20,
+                'ExpiredDate' => Carbon::now()->addMonths(10),
+                'image' => 'images/snacks/Milka-Choco-Cookie.jpg',
+                'description' => 'Crispy golden biscuits covered with genuine European Alpine milk chocolate.',
+            ],
         ];
 
         $seededProducts = [];
