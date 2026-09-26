@@ -106,10 +106,11 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
                 @foreach($relatedProducts as $rel)
                     <div class="col">
-                        <div class="product-card">
-                            <div class="product-img-wrap">
+                        <div class="product-card position-relative" style="cursor: pointer;" 
+                             onclick="window.location='{{ route('product.detail', $rel->PID) }}';">
+                            <a href="{{ route('product.detail', $rel->PID) }}" class="product-img-wrap text-decoration-none d-flex">
                                 <img src="{{ $rel->image_url }}" alt="{{ $rel->PName }}" loading="lazy">
-                            </div>
+                            </a>
                             <div class="card-body p-3 d-flex flex-column flex-grow-1">
                                 <h6 class="fw-bold text-dark mb-2 text-truncate-2" style="font-size: 0.95rem; height: 2.8rem; overflow: hidden;">
                                     <a href="{{ route('product.detail', $rel->PID) }}" class="text-decoration-none text-dark">
