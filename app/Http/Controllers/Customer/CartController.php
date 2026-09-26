@@ -68,6 +68,10 @@ class CartController extends Controller
 
         session()->put('cart', $cart);
 
+        if ($request->input('action') === 'buy_now') {
+            return redirect()->route('cart.index')->with('success', "'{$product->PName}' was added to your cart!");
+        }
+
         return back()->with('success', "'{$product->PName}' was added to your cart!");
     }
 
