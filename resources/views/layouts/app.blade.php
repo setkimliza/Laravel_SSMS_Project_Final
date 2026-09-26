@@ -116,12 +116,18 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            cursor: pointer;
         }
 
         .product-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.08);
             border-color: #cbd5e1;
+        }
+
+        .product-card:hover h6 a {
+            color: var(--primary-dark) !important;
+            text-decoration: underline !important;
         }
 
         .product-img-wrap {

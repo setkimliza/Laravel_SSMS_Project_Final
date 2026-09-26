@@ -121,9 +121,10 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
             @foreach($latestProducts as $product)
                 <div class="col">
-                    <div class="product-card">
+                    <div class="product-card position-relative" style="cursor: pointer;" 
+                         onclick="if (!event.target.closest('form') && !event.target.closest('button')) window.location='{{ route('product.detail', $product->PID) }}';">
                         <!-- Product Image Wrapper -->
-                        <div class="product-img-wrap">
+                        <a href="{{ route('product.detail', $product->PID) }}" class="product-img-wrap text-decoration-none d-flex">
                             <img src="{{ $product->image_url }}" alt="{{ $product->PName }}" loading="lazy">
                             
                             @if($product->isLowStock())
@@ -135,7 +136,7 @@
                                     <i class="bi bi-check-circle me-1"></i> In Stock
                                 </span>
                             @endif
-                        </div>
+                        </a>
 
                         <!-- Product Content -->
                         <div class="card-body p-3 d-flex flex-column flex-grow-1">
@@ -152,7 +153,7 @@
                                     <div class="price-tag">${{ number_format($product->Price, 2) }}</div>
                                 </div>
 
-                                <form action="{{ route('cart.add', $product->PID) }}" method="POST">
+                                <form action="{{ route('cart.add', $product->PID) }}" method="POST" onclick="event.stopPropagation();">
                                     @csrf
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-fresh btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1">

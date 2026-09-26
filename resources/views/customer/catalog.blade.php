@@ -102,8 +102,9 @@
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-4">
                     @foreach($products as $product)
                         <div class="col">
-                            <div class="product-card">
-                                <div class="product-img-wrap">
+                            <div class="product-card position-relative" style="cursor: pointer;" 
+                                 onclick="if (!event.target.closest('form') && !event.target.closest('button')) window.location='{{ route('product.detail', $product->PID) }}';">
+                                <a href="{{ route('product.detail', $product->PID) }}" class="product-img-wrap text-decoration-none d-flex">
                                     <img src="{{ $product->image_url }}" alt="{{ $product->PName }}" loading="lazy">
                                     
                                     @if($product->Qty <= 0)
@@ -119,7 +120,7 @@
                                             <i class="bi bi-check-circle me-1"></i> In Stock
                                         </span>
                                     @endif
-                                </div>
+                                </a>
 
                                 <div class="card-body p-3 d-flex flex-column flex-grow-1">
                                     <div class="badge-category mb-1">{{ $product->category->name ?? 'General' }}</div>
@@ -136,7 +137,7 @@
                                         </div>
 
                                         @if($product->Qty > 0)
-                                            <form action="{{ route('cart.add', $product->PID) }}" method="POST">
+                                            <form action="{{ route('cart.add', $product->PID) }}" method="POST" onclick="event.stopPropagation();">
                                                 @csrf
                                                 <input type="hidden" name="quantity" value="1">
                                                 <button type="submit" class="btn btn-fresh btn-sm rounded-pill px-3 shadow-sm d-flex align-items-center gap-1">
