@@ -364,12 +364,15 @@
                 </div>
 
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white fw-bold mb-3">Supermarket Categories</h6>
-                    <ul class="list-unstyled d-flex flex-column gap-2">
-                        <li><a href="{{ route('catalog') }}?category=1">Snacks & Confectionery</a></li>
-                        <li><a href="{{ route('catalog') }}?category=2">Beverages & Juices</a></li>
-                        <li><a href="{{ route('catalog') }}?category=3">Milk, Butter & Dairy</a></li>
-                        <li><a href="{{ route('catalog') }}?category=8">Fresh Bakery & Pastries</a></li>
+                    <h6 class="text-white fw-bold mb-3">Supermarket Departments</h6>
+                    <ul class="list-unstyled d-flex flex-column gap-2 small">
+                        <li><a href="{{ route('catalog') }}?category=1">Fresh Bakery & Pastries</a></li>
+                        <li><a href="{{ route('catalog') }}?category=2">Beverages & Sodas</a></li>
+                        <li><a href="{{ route('catalog') }}?category=3">Farm-Fresh Fruits</a></li>
+                        <li><a href="{{ route('catalog') }}?category=4">Milk & Dairy</a></li>
+                        <li><a href="{{ route('catalog') }}?category=5">Personal Care</a></li>
+                        <li><a href="{{ route('catalog') }}?category=6">K-Beauty Skincare</a></li>
+                        <li><a href="{{ route('catalog') }}?category=7">Snacks & Confectionery</a></li>
                     </ul>
                 </div>
 
