@@ -1,55 +1,125 @@
 @extends('layouts.admin')
 
-@section('title', 'Sales & Revenue Reports - FreshMart SSMS')
-@section('page-title', 'Sales Analytics & Financial Reporting')
-@section('page-subtitle', 'Supermarket revenue performance, department volume, and top item analysis')
+@section('title', 'Sales & Financial Reports - FreshMart Supermarket')
+@section('page-title', 'Financial Analytics & Revenue Reports')
+@section('page-subtitle', 'Supermarket revenue performance, daily breakdown, and department volume analysis')
 
 @section('content')
-<!-- Date Filter Card -->
+
+<!-- Date Filter & Reporting Toolbar -->
 <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-    <form action="{{ route('admin.sales.index') }}" method="GET" class="row g-3 align-items-end">
-        <div class="col-md-4">
-            <label for="start_date" class="form-label small fw-semibold text-secondary">Start Date</label>
-            <input type="date" name="start_date" id="start_date" class="form-control rounded-pill" 
-                   value="{{ $startDate->format('Y-m-d') }}">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+        <div>
+            <h6 class="fw-black text-dark mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-funnel-fill text-warning"></i> Report Period Filter
+            </h6>
+            <span class="text-muted small">Select custom timeframe or use quick presets</span>
         </div>
-        <div class="col-md-4">
-            <label for="end_date" class="form-label small fw-semibold text-secondary">End Date</label>
-            <input type="date" name="end_date" id="end_date" class="form-control rounded-pill" 
-                   value="{{ $endDate->format('Y-m-d') }}">
-        </div>
-        <div class="col-md-4 d-flex gap-2">
-            <button type="submit" class="btn btn-primary rounded-pill px-4 flex-grow-1">
-                <i class="bi bi-funnel me-1"></i> Apply Filter
+        <!-- Quick Preset Buttons -->
+        <div class="d-flex flex-wrap gap-2">
+            <a href="{{ route('admin.sales.index') }}?start_date={{ \Carbon\Carbon::today()->format('Y-m-d') }}&end_date={{ \Carbon\Carbon::today()->format('Y-m-d') }}" 
+               class="btn btn-sm btn-light border rounded-pill px-3 fw-bold small">
+                Today
+            </a>
+            <a href="{{ route('admin.sales.index') }}?start_date={{ \Carbon\Carbon::now()->subDays(7)->format('Y-m-d') }}&end_date={{ \Carbon\Carbon::now()->format('Y-m-d') }}" 
+               class="btn btn-sm btn-light border rounded-pill px-3 fw-bold small">
+                Last 7 Days
+            </a>
+            <a href="{{ route('admin.sales.index') }}?start_date={{ \Carbon\Carbon::now()->subDays(30)->format('Y-m-d') }}&end_date={{ \Carbon\Carbon::now()->format('Y-m-d') }}" 
+               class="btn btn-sm btn-warning rounded-pill px-3 fw-bold small">
+                Last 30 Days
+            </a>
+            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3 fw-bold" onclick="window.print();" title="Print Fiscal Report">
+                <i class="bi bi-printer me-1"></i> Print Report
             </button>
-            <button type="button" class="btn btn-outline-secondary rounded-pill px-3" onclick="window.print();" title="Print Report">
-                <i class="bi bi-printer"></i>
+        </div>
+    </div>
+
+    <form action="{{ route('admin.sales.index') }}" method="GET" class="row g-3 align-items-end pt-2 border-top border-light-subtle">
+        <div class="col-md-5">
+            <label for="start_date" class="form-label small fw-bold text-secondary">Start Date</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar3"></i></span>
+                <input type="date" name="start_date" id="start_date" class="form-control bg-light border-start-0" 
+                       value="{{ $startDate->format('Y-m-d') }}">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <label for="end_date" class="form-label small fw-bold text-secondary">End Date</label>
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-calendar-check"></i></span>
+                <input type="date" name="end_date" id="end_date" class="form-control bg-light border-start-0" 
+                       value="{{ $endDate->format('Y-m-d') }}">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-dark rounded-pill w-100 fw-bold py-2">
+                <i class="bi bi-arrow-clockwise me-1"></i> Apply
             </button>
         </div>
     </form>
 </div>
 
-<!-- KPI Summary Cards -->
+<!-- Financial Summary Bento KPI Cards (3 Cards) -->
 <div class="row g-3 mb-4">
+    <!-- Period Total Revenue -->
     <div class="col-md-4">
-        <div class="card-stat">
-            <span class="text-muted small fw-semibold text-uppercase">Period Total Revenue</span>
-            <h2 class="fw-bold mb-0 text-dark mt-1 text-success">${{ number_format($totalSales, 2) }}</h2>
-            <div class="text-muted small mt-1">From completed orders</div>
+        <div class="card-bento-kpi">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div>
+                    <span class="bento-stat-label">Period Gross Sales</span>
+                    <div class="bento-stat-num mt-1" style="color: #0f172a;">${{ number_format($totalSales, 2) }}</div>
+                </div>
+                <div class="bento-icon-wrapper bento-icon-gold">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top border-light-subtle small">
+                <span class="text-success fw-bold d-inline-flex align-items-center gap-1">
+                    <i class="bi bi-check-circle-fill"></i> Completed Transactions
+                </span>
+                <span class="text-muted">{{ $startDate->format('M d') }} - {{ $endDate->format('M d') }}</span>
+            </div>
         </div>
     </div>
+
+    <!-- Orders Count -->
     <div class="col-md-4">
-        <div class="card-stat">
-            <span class="text-muted small fw-semibold text-uppercase">Orders Processed</span>
-            <h2 class="fw-bold mb-0 text-dark mt-1">{{ number_format($totalOrders) }}</h2>
-            <div class="text-muted small mt-1">Total customer transactions</div>
+        <div class="card-bento-kpi">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div>
+                    <span class="bento-stat-label">Customer Orders</span>
+                    <div class="bento-stat-num mt-1" style="color: #0369a1;">{{ number_format($totalOrders) }}</div>
+                </div>
+                <div class="bento-icon-wrapper bento-icon-blue">
+                    <i class="bi bi-receipt"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top border-light-subtle small">
+                <a href="{{ route('admin.orders.index') }}" class="text-primary fw-bold text-decoration-none">
+                    View order list &rarr;
+                </a>
+                <span class="text-muted">Avg ${{ $totalOrders > 0 ? number_format($totalSales / $totalOrders, 2) : '0.00' }}/order</span>
+            </div>
         </div>
     </div>
+
+    <!-- Total Grocery Units -->
     <div class="col-md-4">
-        <div class="card-stat">
-            <span class="text-muted small fw-semibold text-uppercase">Grocery Units Sold</span>
-            <h2 class="fw-bold mb-0 text-dark mt-1">{{ number_format($totalProductsSold) }}</h2>
-            <div class="text-muted small mt-1">Aggregated shelf volume</div>
+        <div class="card-bento-kpi">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <div>
+                    <span class="bento-stat-label">Grocery Units Sold</span>
+                    <div class="bento-stat-num mt-1" style="color: #b45309;">{{ number_format($totalProductsSold) }} <span style="font-size: 1rem; color: #64748b;">items</span></div>
+                </div>
+                <div class="bento-icon-wrapper bento-icon-amber">
+                    <i class="bi bi-basket-fill"></i>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-between pt-3 border-top border-light-subtle small">
+                <span class="text-muted">Total units moved off shelf</span>
+                <span class="badge bg-light text-dark border">Catalog Volume</span>
+            </div>
         </div>
     </div>
 </div>
@@ -57,40 +127,70 @@
 <!-- Daily Sales Bar Chart -->
 <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold text-dark mb-0">Daily Revenue Timeline</h6>
-        <span class="badge bg-light text-muted border">Filtered Range</span>
+        <div>
+            <h5 class="fw-black text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-bar-chart-fill text-warning"></i> Daily Revenue Performance
+            </h5>
+            <span class="text-muted small">Daily turnover within selected fiscal range</span>
+        </div>
+        <span class="badge bg-light text-muted border rounded-pill px-3 py-1 fw-bold small">
+            Timeline View
+        </span>
     </div>
-    <div style="height: 260px; position: relative;">
+    <div style="height: 280px; position: relative;">
         <canvas id="dailySalesChart"></canvas>
     </div>
 </div>
 
 <!-- Tables: Top Products & Top Categories -->
 <div class="row g-4">
-    <!-- Top Products -->
+    <!-- Top-Selling Supermarket SKUs -->
     <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
-            <h6 class="fw-bold text-dark mb-3">Top-Selling Supermarket Products</h6>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="fw-black text-dark mb-0">Top-Performing Grocery Items</h6>
+                    <span class="text-muted small">By total units sold & revenue generated</span>
+                </div>
+                <span class="badge bg-light text-dark border rounded-pill px-2 py-1 small fw-bold">Top 10</span>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 small">
-                    <thead class="table-light">
+                <table class="table-executive">
+                    <thead>
                         <tr>
-                            <th>Product Name</th>
+                            <th>Rank & SKU</th>
                             <th class="text-center">Units Sold</th>
-                            <th class="text-end">Total Revenue</th>
+                            <th class="text-end">Revenue</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($topProducts as $item)
+                        @forelse($topProducts as $idx => $item)
                             <tr>
-                                <td class="fw-bold text-dark">{{ $item->PName }}</td>
-                                <td class="text-center fw-semibold">
-                                    <span class="badge bg-light text-dark border">{{ $item->total_qty }}</span>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="rounded-circle bg-light border text-muted small fw-black d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.72rem;">
+                                            {{ $idx + 1 }}
+                                        </span>
+                                        <div>
+                                            <div class="fw-bold text-dark small">{{ $item->PName }}</div>
+                                            <div class="text-muted" style="font-size: 0.7rem;">SKU: #{{ str_pad($item->PID, 4, '0', STR_PAD_LEFT) }}</div>
+                                        </div>
+                                    </div>
                                 </td>
-                                <td class="text-end fw-bold text-success">${{ number_format($item->total_revenue, 2) }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle rounded-pill fw-bold">
+                                        {{ $item->total_qty }} units
+                                    </span>
+                                </td>
+                                <td class="text-end fw-black text-dark">
+                                    ${{ number_format($item->total_revenue, 2) }}
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="text-center text-muted py-3">No product sales in this period.</td></tr>
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4 small">No product sales in this period.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -98,30 +198,50 @@
         </div>
     </div>
 
-    <!-- Top Categories -->
+    <!-- Top-Selling Supermarket Departments -->
     <div class="col-lg-6">
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
-            <h6 class="fw-bold text-dark mb-3">Top-Selling Departments</h6>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="fw-black text-dark mb-0">Top Supermarket Departments</h6>
+                    <span class="text-muted small">Revenue by department category</span>
+                </div>
+                <span class="badge bg-light text-dark border rounded-pill px-2 py-1 small fw-bold">Top Aisles</span>
+            </div>
+
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 small">
-                    <thead class="table-light">
+                <table class="table-executive">
+                    <thead>
                         <tr>
-                            <th>Department</th>
+                            <th>Aisle Department</th>
                             <th class="text-center">Units Sold</th>
                             <th class="text-end">Total Revenue</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($topCategories as $cat)
+                        @forelse($topCategories as $idx => $cat)
                             <tr>
-                                <td class="fw-bold text-dark">{{ $cat->category_name }}</td>
-                                <td class="text-center fw-semibold">
-                                    <span class="badge bg-light text-dark border">{{ $cat->total_qty }}</span>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="rounded-circle bg-light border text-muted small fw-black d-flex align-items-center justify-content-center" style="width: 24px; height: 24px; font-size: 0.72rem;">
+                                            {{ $idx + 1 }}
+                                        </span>
+                                        <span class="fw-bold text-dark small">{{ $cat->category_name }}</span>
+                                    </div>
                                 </td>
-                                <td class="text-end fw-bold text-success">${{ number_format($cat->total_revenue, 2) }}</td>
+                                <td class="text-center">
+                                    <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill fw-bold">
+                                        {{ $cat->total_qty }} units
+                                    </span>
+                                </td>
+                                <td class="text-end fw-black text-dark">
+                                    ${{ number_format($cat->total_revenue, 2) }}
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="3" class="text-center text-muted py-3">No category sales in this period.</td></tr>
+                            <tr>
+                                <td colspan="3" class="text-center text-muted py-4 small">No category sales in this period.</td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -129,40 +249,87 @@
         </div>
     </div>
 </div>
+
 @endsection
 
 @section('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dailyData = @json($dailySales);
-        const labels = dailyData.map(d => d.date);
-        const revenues = dailyData.map(d => parseFloat(d.revenue));
+document.addEventListener('DOMContentLoaded', function () {
+    const dailyData = @json($dailySales);
+    const labels = dailyData.map(d => d.date);
+    const revenues = dailyData.map(d => parseFloat(d.revenue));
 
-        const ctx = document.getElementById('dailySalesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Revenue ($)',
-                    data: revenues,
-                    backgroundColor: '#10b981',
-                    borderRadius: 6
-                }]
+    const ctx = document.getElementById('dailySalesChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Gross Sales ($)',
+                data: revenues,
+                backgroundColor: '#facc15',
+                hoverBackgroundColor: '#eab308',
+                borderRadius: 8,
+                borderWidth: 1,
+                borderColor: '#ca8a04',
+                maxBarThickness: 45
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: '#0f172a',
+                    titleColor: '#facc15',
+                    bodyColor: '#ffffff',
+                    padding: 12,
+                    cornerRadius: 10,
+                    displayColors: false,
+                    callbacks: {
+                        label: function(context) {
+                            return 'Daily Revenue: $' + context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                        }
+                    }
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: function(val) { return '$' + val; }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        font: {
+                            family: 'Plus Jakarta Sans',
+                            size: 11,
+                            weight: '600'
+                        },
+                        callback: function(val) { return '$' + val; }
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#64748b',
+                        font: {
+                            family: 'Plus Jakarta Sans',
+                            size: 11,
+                            weight: '600'
                         }
                     }
                 }
             }
-        });
+        }
     });
+});
 </script>
 @endsection

@@ -60,7 +60,9 @@ class StockDashboardController extends Controller
             $query->where(function ($q) {
                 $q->lowStock()
                   ->orWhere(function ($eq) {
-                      $eq->whereNotNull('ExpiredDate')->where('ExpiredDate', '<=', Carbon::today()->addDays(30));
+                      $eq->where('Qty', '>', 0)
+                         ->whereNotNull('ExpiredDate')
+                         ->where('ExpiredDate', '<=', Carbon::today()->addDays(30));
                   });
             });
         }

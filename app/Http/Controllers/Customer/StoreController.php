@@ -16,21 +16,43 @@ class StoreController extends Controller
     {
         $categories = Category::withCount('products')->get();
 
+        // Curate 6 iconic supermarket staple deals matching real grocery sites
+        $staplePids = [18, 25, 5, 24, 9, 48];
+        $dealProducts = Product::whereIn('PID', $staplePids)
+            ->with('category')
+            ->get()
+            ->sortBy(function ($model) use ($staplePids) {
+                return array_search($model->PID, $staplePids);
+            });
+
+        // Fallback if any staple is missing
+        if ($dealProducts->count() < 6) {
+            $extra = Product::where('Qty', '>', 0)
+                ->whereNotNull('image')
+                ->whereNotIn('PID', $dealProducts->pluck('PID')->toArray())
+                ->with('category')
+                ->take(6 - $dealProducts->count())
+                ->get();
+            $dealProducts = $dealProducts->merge($extra);
+        }
+
+        // Popular picks (everyday household staples)
+        $popularProducts = Product::where('Qty', '>', 0)
+            ->whereNotNull('image')
+            ->whereNotIn('PID', $dealProducts->pluck('PID')->toArray())
+            ->with('category')
+            ->take(8)
+            ->get();
+
         // Fresh arrivals (latest products in stock)
         $latestProducts = Product::where('Qty', '>', 0)
+            ->whereNotNull('image')
             ->with('category')
             ->orderBy('PID', 'desc')
             ->take(8)
             ->get();
 
-        // Popular picks (products that have stock)
-        $popularProducts = Product::where('Qty', '>', 0)
-            ->with('category')
-            ->inRandomOrder()
-            ->take(8)
-            ->get();
-
-        return view('customer.home', compact('categories', 'latestProducts', 'popularProducts'));
+        return view('customer.home', compact('categories', 'dealProducts', 'popularProducts', 'latestProducts'));
     }
 
     /**

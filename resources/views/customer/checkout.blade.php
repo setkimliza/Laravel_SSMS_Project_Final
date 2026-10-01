@@ -1,12 +1,54 @@
 @extends('layouts.app')
 
-@section('title', 'Express Checkout - FreshMart')
+@section('title', 'Checkout - FreshMart')
+
+@section('styles')
+<style>
+    .checkout-card {
+        background: #ffffff;
+        border: 1.5px solid #fef08a;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 14px rgba(250, 204, 21, 0.08);
+    }
+    .checkout-section-title {
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--dark);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .payment-option-card {
+        border: 1.5px solid #fef08a;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        background: #ffffff;
+        cursor: pointer;
+        transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+    .payment-option-card:hover {
+        border-color: #facc15;
+        background: #fffdf5;
+    }
+    .payment-option-card.active {
+        border-color: #facc15;
+        background: #fefce8;
+    }
+    .form-control:focus {
+        border-color: #facc15;
+        box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.25);
+    }
+</style>
+@endsection
 
 @section('content')
-<div class="container pb-5">
+<div class="container pb-5" style="max-width: 1140px;">
+    <!-- Page Header -->
     <div class="mb-4 pb-2 border-bottom">
-        <h2 class="fw-bold mb-0"><i class="bi bi-shield-check text-success me-2"></i> Express Checkout</h2>
-        <span class="text-muted small">Please confirm your delivery address and preferred payment method</span>
+        <h1 class="h3 fw-bold text-dark mb-1">Checkout</h1>
+        <p class="text-muted small mb-0">Confirm your delivery details and choose your preferred payment option.</p>
     </div>
 
     <form action="{{ route('checkout.process') }}" method="POST">
@@ -14,69 +56,90 @@
         <div class="row g-4">
             <!-- Left: Delivery & Payment Details -->
             <div class="col-lg-7">
-                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
-                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                        <span class="badge rounded-circle bg-success text-white" style="width: 26px; height: 26px; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;">1</span>
-                        <span>Customer & Delivery Information</span>
-                    </h5>
+                <!-- Delivery Details Card -->
+                <div class="checkout-card mb-4">
+                    <div class="checkout-section-title">
+                        <i class="bi bi-geo-alt" style="color: #ca8a04;"></i>
+                        <span>Delivery Information</span>
+                    </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold small text-secondary">Customer Name</label>
-                        <input type="text" class="form-control bg-light" value="{{ $user->name }}" readonly disabled>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Customer Name</label>
+                            <input type="text" class="form-control form-control-sm bg-light text-muted" value="{{ $user->name }}" readonly disabled>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-semibold text-secondary mb-1">Email Address</label>
+                            <input type="email" class="form-control form-control-sm bg-light text-muted" value="{{ $user->email }}" readonly disabled>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small text-secondary">Email Address</label>
-                        <input type="email" class="form-control bg-light" value="{{ $user->email }}" readonly disabled>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="phone" class="form-label fw-semibold small text-secondary">Recipient Phone Number <span class="text-danger">*</span></label>
+                        <label for="phone" class="form-label small fw-semibold text-secondary mb-1">
+                            Contact Phone <span class="text-danger">*</span>
+                        </label>
                         <input type="text" name="phone" id="phone" class="form-control" 
-                               value="{{ old('phone', $user->phone ?? '+1 (555) 234-5678') }}" required>
-                        <div class="form-text small">Our delivery rider will call this number upon arrival.</div>
+                               value="{{ old('phone', $user->phone ?? '+1 (555) 234-5678') }}" required
+                               placeholder="e.g. +1 555-0192">
+                        <div class="form-text small text-muted">Used by our courier for delivery arrival updates.</div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="shipping_address" class="form-label fw-semibold small text-secondary">Delivery Address <span class="text-danger">*</span></label>
+                        <label for="shipping_address" class="form-label small fw-semibold text-secondary mb-1">
+                            Delivery Address <span class="text-danger">*</span>
+                        </label>
                         <textarea name="shipping_address" id="shipping_address" rows="3" class="form-control" 
-                                  placeholder="House/Apt number, Street name, City, Zip code" required>{{ old('shipping_address', $user->address ?? '742 Evergreen Terrace, Springfield') }}</textarea>
+                                  placeholder="House/Apartment #, Street, City, Postal Code" required>{{ old('shipping_address', $user->address ?? '742 Evergreen Terrace, Springfield') }}</textarea>
                     </div>
 
-                    <div class="mb-0">
-                        <label for="customer_notes" class="form-label fw-semibold small text-secondary">Order Notes (Optional)</label>
+                    <div>
+                        <label for="customer_notes" class="form-label small fw-semibold text-secondary mb-1">
+                            Delivery Instructions (Optional)
+                        </label>
                         <textarea name="customer_notes" id="customer_notes" rows="2" class="form-control" 
-                                  placeholder="Special delivery instructions, gate code, preferred delivery time...">{{ old('customer_notes') }}</textarea>
+                                  placeholder="Gate code, drop-off location, preferred drop time...">{{ old('customer_notes') }}</textarea>
                     </div>
                 </div>
 
-                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                        <span class="badge rounded-circle bg-success text-white" style="width: 26px; height: 26px; font-size: 0.8rem; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                <!-- Payment Method Card -->
+                <div class="checkout-card">
+                    <div class="checkout-section-title">
+                        <i class="bi bi-credit-card" style="color: #ca8a04;"></i>
                         <span>Payment Method</span>
-                    </h5>
-
-                    <div class="form-check p-3 rounded-3 border mb-2 bg-light">
-                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="pay_cod" value="Cash on Delivery" checked>
-                        <label class="form-check-label fw-bold text-dark d-flex align-items-center justify-content-between w-100" for="pay_cod">
-                            <span><i class="bi bi-cash-stack text-success me-2 fs-5"></i> Cash on Delivery (COD)</span>
-                            <span class="badge bg-success-subtle text-success">Recommended</span>
-                        </label>
                     </div>
 
-                    <div class="form-check p-3 rounded-3 border mb-2">
-                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="pay_card" value="Credit/Debit Card">
-                        <label class="form-check-label fw-bold text-dark d-flex align-items-center justify-content-between w-100" for="pay_card">
-                            <span><i class="bi bi-credit-card-2-front text-primary me-2 fs-5"></i> Credit or Debit Card</span>
-                            <span class="text-muted small">Visa / Master</span>
+                    <div class="d-flex flex-column gap-2">
+                        <label class="payment-option-card d-flex align-items-center justify-content-between active" for="pay_cod">
+                            <div class="d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_cod" value="Cash on Delivery" checked>
+                                <div>
+                                    <div class="fw-semibold text-dark small">Cash on Delivery (COD)</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Pay in cash upon doorstep delivery</div>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-secondary border small">Default</span>
                         </label>
-                    </div>
 
-                    <div class="form-check p-3 rounded-3 border">
-                        <input class="form-check-input ms-0 me-3" type="radio" name="payment_method" id="pay_bank" value="Online Banking">
-                        <label class="form-check-label fw-bold text-dark d-flex align-items-center justify-content-between w-100" for="pay_bank">
-                            <span><i class="bi bi-bank text-info-emphasis me-2 fs-5"></i> Instant Bank Transfer</span>
-                            <span class="text-muted small">Direct Pay</span>
+                        <label class="payment-option-card d-flex align-items-center justify-content-between" for="pay_card">
+                            <div class="d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_card" value="Credit/Debit Card">
+                                <div>
+                                    <div class="fw-semibold text-dark small">Credit or Debit Card</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Visa, MasterCard, or American Express</div>
+                                </div>
+                            </div>
+                            <span class="text-muted small"><i class="bi bi-credit-card-2-front"></i></span>
+                        </label>
+
+                        <label class="payment-option-card d-flex align-items-center justify-content-between" for="pay_bank">
+                            <div class="d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="radio" name="payment_method" id="pay_bank" value="Online Banking">
+                                <div>
+                                    <div class="fw-semibold text-dark small">Instant Online Banking</div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">Direct bank transfer via secure gateway</div>
+                                </div>
+                            </div>
+                            <span class="text-muted small"><i class="bi bi-bank"></i></span>
                         </label>
                     </div>
                 </div>
@@ -84,62 +147,62 @@
 
             <!-- Right: Order Review & Total -->
             <div class="col-lg-5">
-                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 90px;">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold mb-0">Order Review</h5>
-                        <a href="{{ route('cart.index') }}" class="small text-success text-decoration-none">Edit Cart</a>
+                <div class="checkout-card sticky-top" style="top: 90px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <span class="fw-bold text-dark">Order Review</span>
+                        <a href="{{ route('cart.index') }}" class="small text-muted text-decoration-none">Edit Cart</a>
                     </div>
 
                     <!-- Items list -->
-                    <div class="mb-3" style="max-height: 280px; overflow-y: auto;">
+                    <div class="mb-3" style="max-height: 240px; overflow-y: auto;">
                         @foreach($cart as $id => $item)
                             <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="badge bg-light text-dark border rounded-pill">{{ $item['quantity'] }}x</span>
-                                    <div class="text-truncate" style="max-width: 200px;">
-                                        <div class="fw-semibold text-dark text-truncate small">{{ $item['name'] }}</div>
-                                        <div class="text-muted small">${{ number_format($item['price'], 2) }} each</div>
+                                    <span class="badge bg-light text-muted border" style="font-size: 0.75rem;">{{ $item['quantity'] }}×</span>
+                                    <div class="text-truncate" style="max-width: 190px;">
+                                        <div class="fw-medium text-dark text-truncate small">{{ $item['name'] }}</div>
+                                        <div class="text-muted" style="font-size: 0.75rem;">${{ number_format($item['price'], 2) }} each</div>
                                     </div>
                                 </div>
-                                <div class="fw-bold text-dark">
+                                <span class="fw-semibold text-dark small">
                                     ${{ number_format($item['price'] * $item['quantity'], 2) }}
-                                </div>
+                                </span>
                             </div>
                         @endforeach
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 text-secondary small">
-                        <span>Items Subtotal:</span>
+                        <span>Items Subtotal</span>
                         <span class="fw-semibold text-dark">${{ number_format($subtotal, 2) }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-2 text-secondary small">
-                        <span>Sales Tax (5%):</span>
+                        <span>Estimated Tax (5%)</span>
                         <span class="fw-semibold text-dark">${{ number_format($tax, 2) }}</span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3 text-secondary small">
-                        <span>Standard Delivery:</span>
-                        <span class="text-success fw-bold">FREE</span>
+                        <span>Delivery</span>
+                        <span class="fw-bold" style="color: #ca8a04;">Free Express</span>
                     </div>
 
-                    <hr class="my-3">
-
-                    <div class="d-flex justify-content-between align-items-baseline mb-4">
-                        <span class="fw-bold text-dark">Total Payable:</span>
-                        <span class="display-6 fw-extrabold text-success" style="font-weight: 800;">
+                    <div class="d-flex justify-content-between align-items-baseline pt-3 border-top mb-4">
+                        <div>
+                            <span class="fw-bold text-dark">Total</span>
+                            <div class="text-muted" style="font-size: 0.72rem;">Including taxes</div>
+                        </div>
+                        <span class="h4 fw-bold text-dark mb-0">
                             ${{ number_format($total, 2) }}
                         </span>
                     </div>
 
-                    <button type="submit" class="btn btn-fresh btn-lg w-100 rounded-pill py-3 fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
-                        <i class="bi bi-bag-check-fill"></i>
+                    <button type="submit" class="btn btn-fresh w-100 py-3 fw-bold d-flex align-items-center justify-content-center gap-2">
                         <span>Confirm & Place Order</span>
+                        <i class="bi bi-arrow-right"></i>
                     </button>
 
-                    <div class="d-flex align-items-center justify-content-center gap-2 text-muted small mt-3">
-                        <i class="bi bi-lock-fill text-success"></i>
-                        <span>Encrypted SSL 256-bit Secure Transaction</span>
+                    <div class="text-center text-muted small mt-3" style="font-size: 0.78rem;">
+                        <i class="bi bi-shield-check me-1" style="color: #ca8a04;"></i> 256-bit encrypted checkout guarantee
                     </div>
                 </div>
             </div>

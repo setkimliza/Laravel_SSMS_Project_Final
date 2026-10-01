@@ -18,7 +18,7 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-4 mb-4">
                     <div>
-                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-1 rounded-pill mb-2">Order Invoice</span>
+                        <span class="badge fw-bold px-3 py-1 rounded-pill mb-2" style="background: #fef08a; color: #854d0e;">Order Invoice</span>
                         <h3 class="fw-bold mb-0">Order #{{ str_pad($order->OrderID, 5, '0', STR_PAD_LEFT) }}</h3>
                         <div class="text-muted small">Date: {{ \Carbon\Carbon::parse($order->OrderDate)->format('M d, Y - h:i A') }}</div>
                     </div>
@@ -73,7 +73,7 @@
                         <tfoot class="table-light">
                             <tr>
                                 <td colspan="3" class="text-end fw-bold">Total Paid:</td>
-                                <td class="text-end fw-bold text-success fs-5">${{ number_format($order->TotalAmount, 2) }}</td>
+                                <td class="text-end fw-bold fs-5" style="color: #ca8a04;">${{ number_format($order->TotalAmount, 2) }}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -84,7 +84,7 @@
                         <i class="bi bi-arrow-left me-1"></i> Back to Orders
                     </a>
                     <a href="{{ route('catalog') }}" class="btn btn-fresh rounded-pill px-4">
-                        Buy Groceries Again
+                        Shop Mini Mart Again
                     </a>
                 </div>
             </div>

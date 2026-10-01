@@ -13,7 +13,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with('category');
+        $query = Product::with('category')->withCount('orderDetails');
 
         // Search by keyword
         if ($request->filled('search')) {
@@ -125,14 +125,41 @@ class ProductController extends Controller
     {
         $request->validate([
             'Qty' => 'required|integer|min:0',
+            'ExpiredDate' => 'nullable|date',
         ]);
 
         $product = Product::findOrFail($id);
         $oldQty = $product->Qty;
         $product->Qty = $request->Qty;
+
+        $dateUpdated = false;
+        if ($request->filled('ExpiredDate')) {
+            $product->ExpiredDate = $request->ExpiredDate;
+            $dateUpdated = true;
+        }
+
         $product->save();
 
-        return back()->with('success', "Stock updated for '{$product->PName}': {$oldQty} → {$product->Qty} units.");
+        $msg = "Stock updated for '{$product->PName}': {$oldQty} → {$product->Qty} units.";
+        if ($dateUpdated) {
+            $msg .= " New shelf expiration date set: " . Carbon::parse($product->ExpiredDate)->format('M d, Y') . ".";
+        }
+
+        return back()->with('success', $msg);
+    }
+
+    /**
+     * Pull expired items from shelves and write them off as discard/waste.
+     */
+    public function discardExpired($id)
+    {
+        $product = Product::findOrFail($id);
+        $discardedUnits = $product->Qty;
+
+        $product->Qty = 0;
+        $product->save();
+
+        return back()->with('success', "Pulled & discarded {$discardedUnits} expired unit(s) of '{$product->PName}' from supermarket shelves. Recorded as Spoilage/Waste Write-off.");
     }
 
     public function destroy($id)

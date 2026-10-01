@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
+                    <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">
                         <i class="bi bi-save me-1"></i> Save Changes
                     </button>
                     <a href="{{ route('stock.categories.index') }}" class="btn btn-light rounded-pill px-3">

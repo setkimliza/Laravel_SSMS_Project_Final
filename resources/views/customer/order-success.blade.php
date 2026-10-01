@@ -7,25 +7,25 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <!-- Confirmation Header Card -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center bg-white mb-4">
-                <div class="rounded-circle bg-success-subtle text-success d-inline-flex p-3 mx-auto mb-3">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 text-center bg-white mb-4" style="border: 1.5px solid #fef08a !important;">
+                <div class="rounded-circle d-inline-flex p-3 mx-auto mb-3" style="background: #fef08a; color: #854d0e;">
                     <i class="bi bi-check-lg display-4"></i>
                 </div>
                 <h2 class="fw-extrabold text-dark mb-1">Thank You! Order Confirmed</h2>
-                <p class="text-muted mb-3">Your grocery order has been received and stock has been automatically deducted.</p>
+                <p class="text-muted mb-3">Your mini mart order has been received and stock has been automatically deducted.</p>
 
                 <div class="d-inline-flex align-items-center gap-2 px-3 py-2 bg-light rounded-pill border mx-auto">
                     <span class="text-muted small">Order Number:</span>
                     <strong class="text-dark">#{{ str_pad($order->OrderID, 5, '0', STR_PAD_LEFT) }}</strong>
-                    <span class="badge bg-success ms-2">{{ $order->Status }}</span>
+                    <span class="badge ms-2" style="background: #facc15; color: #0f172a; font-weight: 800;">{{ $order->Status }}</span>
                 </div>
             </div>
 
             <!-- Receipt Card -->
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4" id="printableInvoice">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4" id="printableInvoice" style="border: 1.5px solid #fef08a !important;">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
                     <div>
-                        <h5 class="fw-bold text-dark mb-0">Supermarket Sales Receipt</h5>
+                        <h5 class="fw-bold text-dark mb-0">Mini Mart Sales Receipt</h5>
                         <div class="text-muted small">Placed on: {{ \Carbon\Carbon::parse($order->OrderDate)->format('F d, Y - h:i A') }}</div>
                     </div>
                     <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="window.print();">
@@ -74,7 +74,7 @@
                         <tfoot class="table-light">
                             <tr>
                                 <td colspan="3" class="text-end fw-bold">Grand Total Paid:</td>
-                                <td class="text-end display-6 fw-bold text-success fs-5">
+                                <td class="text-end display-6 fw-bold fs-5" style="color: #ca8a04;">
                                     ${{ number_format($order->TotalAmount, 2) }}
                                 </td>
                             </tr>

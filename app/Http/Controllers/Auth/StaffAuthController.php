@@ -43,9 +43,10 @@ class StaffAuthController extends Controller
             }
         }
 
-        return back()->withErrors([
-            'UserName' => 'Invalid staff username or password.',
-        ])->onlyInput('UserName');
+        return back()->with('error', 'Incorrect credentials entered. Default credentials are — Admin: "admin" (Password: 123) or Stock: "stock" (Password: 123).')
+            ->withErrors([
+                'UserName' => 'Invalid username or password. Valid accounts: admin / 123 or stock / 123.',
+            ])->onlyInput('UserName');
     }
 
     /**

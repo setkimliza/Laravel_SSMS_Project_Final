@@ -67,11 +67,11 @@ class Product extends Model
     }
 
     /**
-     * Check if product is expired.
+     * Check if product is expired on shelf.
      */
     public function isExpired(): bool
     {
-        return $this->ExpiredDate && Carbon::parse($this->ExpiredDate)->isPast();
+        return $this->Qty > 0 && $this->ExpiredDate && Carbon::parse($this->ExpiredDate)->isPast();
     }
 
     /**
@@ -79,7 +79,7 @@ class Product extends Model
      */
     public function isExpiringSoon(int $days = 30): bool
     {
-        if (!$this->ExpiredDate) {
+        if ($this->Qty <= 0 || !$this->ExpiredDate) {
             return false;
         }
         $date = Carbon::parse($this->ExpiredDate);
@@ -95,19 +95,22 @@ class Product extends Model
     }
 
     /**
-     * Scope for expired products.
+     * Scope for expired products actively on shelves.
      */
     public function scopeExpired($query)
     {
-        return $query->whereNotNull('ExpiredDate')->where('ExpiredDate', '<=', Carbon::today());
+        return $query->where('Qty', '>', 0)
+            ->whereNotNull('ExpiredDate')
+            ->where('ExpiredDate', '<=', Carbon::today());
     }
 
     /**
-     * Scope for expiring soon products.
+     * Scope for expiring soon products actively on shelves.
      */
     public function scopeExpiringSoon($query, int $days = 30)
     {
-        return $query->whereNotNull('ExpiredDate')
+        return $query->where('Qty', '>', 0)
+            ->whereNotNull('ExpiredDate')
             ->where('ExpiredDate', '>', Carbon::today())
             ->where('ExpiredDate', '<=', Carbon::today()->addDays($days));
     }
@@ -118,13 +121,13 @@ class Product extends Model
     public function getImageUrlAttribute(): string
     {
         if ($this->image && file_exists(public_path($this->image))) {
-            return asset($this->image);
+            return asset(str_replace(' ', '%20', $this->image));
         }
         if ($this->image && file_exists(public_path('images/' . $this->image))) {
-            return asset('images/' . $this->image);
+            return asset('images/' . str_replace(' ', '%20', $this->image));
         }
         if ($this->image && file_exists(public_path('storage/' . $this->image))) {
-            return asset('storage/' . $this->image);
+            return asset('storage/' . str_replace(' ', '%20', $this->image));
         }
         if ($this->image && (str_starts_with($this->image, 'http') || str_starts_with($this->image, 'https'))) {
             return $this->image;

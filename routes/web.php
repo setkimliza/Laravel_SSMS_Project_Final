@@ -68,6 +68,16 @@ Route::get('/staff/login', [StaffAuthController::class, 'showLoginForm'])->name(
 Route::post('/staff/login', [StaffAuthController::class, 'login']);
 Route::post('/staff/logout', [StaffAuthController::class, 'logout'])->name('staff.logout');
 
+if (app()->environment('local')) {
+    Route::get('/dev-login-admin', function () {
+        $admin = \App\Models\Staff::where('Role', 'Admin')->first();
+        if ($admin) {
+            \Illuminate\Support\Facades\Auth::guard('staff')->login($admin);
+        }
+        return redirect()->route('admin.dashboard');
+    });
+}
+
 /*
 |--------------------------------------------------------------------------
 | Admin Portal (Role: Admin)
@@ -101,4 +111,5 @@ Route::middleware(['staff.role:Admin,Stock'])->prefix('stock')->name('stock.')->
     // Product Management CRUD & Stock quick adjustments
     Route::resource('products', ProductController::class)->except(['show']);
     Route::post('/products/{id}/quick-stock', [ProductController::class, 'quickStockUpdate'])->name('products.quick-stock');
+    Route::post('/products/{id}/discard-expired', [ProductController::class, 'discardExpired'])->name('products.discard-expired');
 });

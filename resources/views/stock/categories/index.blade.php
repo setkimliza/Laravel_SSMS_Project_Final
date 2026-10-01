@@ -7,19 +7,24 @@
 @section('content')
 <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
     <!-- Toolbar -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-        <form action="{{ route('stock.categories.index') }}" method="GET" class="d-flex gap-2">
-            <input type="text" name="search" class="form-control form-control-sm rounded-pill ps-3" 
-                   placeholder="Search department..." value="{{ request('search') }}" style="min-width: 240px;">
-            <button type="submit" class="btn btn-sm btn-secondary rounded-pill px-3">Search</button>
-            @if(request('search'))
-                <a href="{{ route('stock.categories.index') }}" class="btn btn-sm btn-light rounded-pill px-2">Clear</a>
-            @endif
-        </form>
+    <div class="card bg-light border-0 rounded-4 p-3 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <form action="{{ route('stock.categories.index') }}" method="GET" class="d-flex gap-2">
+                <div class="input-group input-group-sm" style="min-width: 260px;">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 rounded-end-pill ps-0" 
+                           placeholder="Search department..." value="{{ request('search') }}">
+                </div>
+                <button type="submit" class="btn btn-sm btn-dark rounded-pill px-3">Search</button>
+                @if(request('search'))
+                    <a href="{{ route('stock.categories.index') }}" class="btn btn-sm btn-outline-secondary rounded-pill px-2">Clear</a>
+                @endif
+            </form>
 
-        <a href="{{ route('stock.categories.create') }}" class="btn btn-sm btn-primary rounded-pill px-3 fw-bold d-flex align-items-center gap-1">
-            <i class="bi bi-plus-circle"></i> Add New Category
-        </a>
+            <a href="{{ route('stock.categories.create') }}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold d-inline-flex align-items-center gap-1 text-nowrap">
+                <i class="bi bi-plus-lg"></i> Add New Category
+            </a>
+        </div>
     </div>
 
     <!-- Categories Table -->
@@ -59,13 +64,16 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
 
-                                <form action="{{ route('stock.categories.destroy', $category->CatID) }}" method="POST" onsubmit="return confirm('Delete category {{ $category->name }}?');" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Delete Category" {{ $category->products_count > 0 ? 'disabled' : '' }}>
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" 
+                                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                        data-action="{{ route('stock.categories.destroy', $category->CatID) }}"
+                                        data-name="{{ $category->name }}"
+                                        data-id="#{{ str_pad($category->CatID, 3, '0', STR_PAD_LEFT) }}"
+                                        data-type="Category"
+                                        title="{{ $category->products_count > 0 ? 'Cannot delete: category has ' . $category->products_count . ' active product(s)' : 'Delete Category' }}" 
+                                        {{ $category->products_count > 0 ? 'disabled' : '' }}>
+                                    <i class="bi bi-trash3"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>

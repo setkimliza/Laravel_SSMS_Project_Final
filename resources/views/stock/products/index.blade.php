@@ -7,46 +7,63 @@
 @section('content')
 <div class="card border-0 shadow-sm rounded-4 bg-white p-4">
     <!-- Filter Toolbar -->
-    <div class="d-flex flex-column flex-xl-row justify-content-between align-items-xl-center gap-3 mb-4">
-        <form action="{{ route('stock.products.index') }}" method="GET" class="d-flex flex-wrap gap-2 flex-grow-1">
+    <div class="card bg-light border-0 rounded-4 p-3 mb-4">
+        <form action="{{ route('stock.products.index') }}" method="GET" class="row g-2 align-items-center">
             <!-- Search -->
-            <input type="text" name="search" class="form-control form-control-sm rounded-pill ps-3" 
-                   placeholder="Search product name or SKU..." value="{{ request('search') }}" style="min-width: 200px;">
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 rounded-end-pill ps-0" 
+                           placeholder="Search product or SKU..." value="{{ request('search') }}">
+                </div>
+            </div>
 
             <!-- Category Filter -->
-            <select name="category" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()" style="max-width: 170px;">
-                <option value="">All Departments</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->CatID }}" {{ request('category') == $cat->CatID ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                @endforeach
-            </select>
+            <div class="col-6 col-md-3 col-lg-2">
+                <select name="category" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                    <option value="">All Departments</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->CatID }}" {{ request('category') == $cat->CatID ? 'selected' : '' }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
             <!-- Stock Status Filter -->
-            <select name="stock_status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()" style="max-width: 160px;">
-                <option value="">All Stock Levels</option>
-                <option value="low" {{ request('stock_status') == 'low' ? 'selected' : '' }}>Low Stock (&le; Min)</option>
-                <option value="out" {{ request('stock_status') == 'out' ? 'selected' : '' }}>Out of Stock (0)</option>
-                <option value="healthy" {{ request('stock_status') == 'healthy' ? 'selected' : '' }}>Healthy Stock</option>
-            </select>
+            <div class="col-6 col-md-3 col-lg-2">
+                <select name="stock_status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                    <option value="">All Stock Levels</option>
+                    <option value="low" {{ request('stock_status') == 'low' ? 'selected' : '' }}>Low Stock (&le; Min)</option>
+                    <option value="out" {{ request('stock_status') == 'out' ? 'selected' : '' }}>Out of Stock (0)</option>
+                    <option value="healthy" {{ request('stock_status') == 'healthy' ? 'selected' : '' }}>Healthy Stock</option>
+                </select>
+            </div>
 
             <!-- Expiry Status Filter -->
-            <select name="expiry_status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()" style="max-width: 160px;">
-                <option value="">All Expiries</option>
-                <option value="expired" {{ request('expiry_status') == 'expired' ? 'selected' : '' }}>Expired</option>
-                <option value="expiring_soon" {{ request('expiry_status') == 'expiring_soon' ? 'selected' : '' }}>Expiring Soon (30d)</option>
-            </select>
+            <div class="col-6 col-md-3 col-lg-2">
+                <select name="expiry_status" class="form-select form-select-sm rounded-pill" onchange="this.form.submit()">
+                    <option value="">All Expiries</option>
+                    <option value="expired" {{ request('expiry_status') == 'expired' ? 'selected' : '' }}>Expired</option>
+                    <option value="expiring_soon" {{ request('expiry_status') == 'expiring_soon' ? 'selected' : '' }}>Expiring Soon (30d)</option>
+                </select>
+            </div>
 
-            <button type="submit" class="btn btn-sm btn-secondary rounded-pill px-3">Filter</button>
-            @if(request()->anyFilled(['search', 'category', 'stock_status', 'expiry_status']))
-                <a href="{{ route('stock.products.index') }}" class="btn btn-sm btn-light rounded-pill px-2">Clear</a>
-            @endif
+            <!-- Actions -->
+            <div class="col-6 col-md-auto d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-dark rounded-pill px-3">Filter</button>
+                @if(request()->anyFilled(['search', 'category', 'stock_status', 'expiry_status']))
+                    <a href="{{ route('stock.products.index') }}" class="btn btn-sm btn-outline-secondary rounded-pill px-2">Clear</a>
+                @endif
+            </div>
+
+            <!-- Add Product (Pushed to Right) -->
+            <div class="col-12 col-lg text-lg-end mt-2 mt-lg-0">
+                <a href="{{ route('stock.products.create') }}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold d-inline-flex align-items-center gap-1 text-nowrap">
+                    <i class="bi bi-plus-lg"></i> Add New Product
+                </a>
+            </div>
         </form>
-
-        <a href="{{ route('stock.products.create') }}" class="btn btn-sm btn-success rounded-pill px-3 fw-bold d-flex align-items-center gap-1 text-nowrap">
-            <i class="bi bi-plus-lg"></i> Add New Product
-        </a>
     </div>
 
     <!-- Products Table -->
@@ -127,13 +144,16 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
 
-                                <form action="{{ route('stock.products.destroy', $product->PID) }}" method="POST" onsubmit="return confirm('Delete product {{ $product->PName }}?');" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Delete Product">
-                                        <i class="bi bi-trash3"></i>
-                                    </button>
-                                </form>
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-2" 
+                                        data-bs-toggle="modal" data-bs-target="#deleteConfirmModal"
+                                        data-action="{{ route('stock.products.destroy', $product->PID) }}"
+                                        data-name="{{ $product->PName }}"
+                                        data-id="#{{ str_pad($product->PID, 4, '0', STR_PAD_LEFT) }}"
+                                        data-type="Product"
+                                        title="{{ ($product->order_details_count ?? 0) > 0 ? 'Cannot delete: linked to ' . $product->order_details_count . ' order transaction(s)' : 'Delete Product' }}" 
+                                        {{ ($product->order_details_count ?? 0) > 0 ? 'disabled' : '' }}>
+                                    <i class="bi bi-trash3"></i>
+                                </button>
                             </div>
                         </td>
                     </tr>
