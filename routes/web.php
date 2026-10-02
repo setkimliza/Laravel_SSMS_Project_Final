@@ -44,7 +44,7 @@ Route::middleware('guest:web')->group(function () {
     Route::get('/register', [CustomerAuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [CustomerAuthController::class, 'register']);
 });
-Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('logout')->middleware('auth:web');
+Route::match(['get', 'post'], '/logout', [CustomerAuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
@@ -66,7 +66,7 @@ Route::middleware('auth:web')->group(function () {
 */
 Route::get('/staff/login', [StaffAuthController::class, 'showLoginForm'])->name('staff.login');
 Route::post('/staff/login', [StaffAuthController::class, 'login']);
-Route::post('/staff/logout', [StaffAuthController::class, 'logout'])->name('staff.logout');
+Route::match(['get', 'post'], '/staff/logout', [StaffAuthController::class, 'logout'])->name('staff.logout');
 
 if (app()->environment('local')) {
     Route::get('/dev-login-admin', function () {

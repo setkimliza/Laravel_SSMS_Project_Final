@@ -77,7 +77,7 @@ class SSMSSystemTest extends TestCase
         if ($admin) {
             $response = $this->post('/staff/login', [
                 'UserName' => $admin->UserName,
-                'Password' => 'password123',
+                'Password' => '123',
             ]);
             $response->assertRedirect(route('admin.dashboard'));
             $this->assertAuthenticatedAs($admin, 'staff');
@@ -91,7 +91,7 @@ class SSMSSystemTest extends TestCase
         if ($stock) {
             $response = $this->post('/staff/login', [
                 'UserName' => $stock->UserName,
-                'Password' => 'password123',
+                'Password' => '123',
             ]);
             $response->assertRedirect(route('stock.dashboard'));
             $this->assertAuthenticatedAs($stock, 'staff');
@@ -149,5 +149,29 @@ class SSMSSystemTest extends TestCase
         $orderDetail = OrderDetail::where('OrderID', $latestOrder->OrderID)->where('PID', $product->PID)->first();
         $this->assertNotNull($orderDetail);
         $this->assertEquals(2, $orderDetail->Quantity);
+    }
+
+    /**
+     * Test staff login page returns no-cache headers to prevent stale CSRF.
+     */
+    public function test_staff_login_has_no_cache_headers(): void
+    {
+        $response = $this->get('/staff/login');
+        $response->assertStatus(200);
+        $this->assertStringContainsString('no-store', (string)$response->headers->get('Cache-Control'));
+    }
+
+    /**
+     * Test staff logout route works smoothly.
+     */
+    public function test_staff_logout_route_clears_session(): void
+    {
+        $admin = Staff::where('Role', 'Admin')->first();
+        if ($admin) {
+            $this->actingAs($admin, 'staff');
+            $response = $this->get('/staff/logout');
+            $response->assertRedirect(route('staff.login'));
+            $this->assertGuest('staff');
+        }
     }
 }

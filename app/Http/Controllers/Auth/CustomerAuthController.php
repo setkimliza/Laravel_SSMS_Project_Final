@@ -18,7 +18,11 @@ class CustomerAuthController extends Controller
         if (Auth::guard('web')->check()) {
             return redirect()->route('home');
         }
-        return view('auth.login');
+        return response()
+            ->view('auth.login')
+            ->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
     }
 
     /**
@@ -87,6 +91,10 @@ class CustomerAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('home')->with('info', 'You have been logged out.');
+        return redirect()->route('home')
+            ->with('info', 'You have been logged out.')
+            ->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
     }
 }

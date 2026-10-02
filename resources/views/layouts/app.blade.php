@@ -552,12 +552,9 @@
                             </li>
                             <li><hr class="dropdown-divider my-1"></li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger py-2 fw-semibold small">
-                                        <i class="bi bi-box-arrow-right me-2"></i> Log Out
-                                    </button>
-                                </form>
+                                <a href="{{ route('logout') }}" class="dropdown-item text-danger py-2 fw-semibold small">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Log Out
+                                </a>
                             </li>
                         </ul>
                     </div>

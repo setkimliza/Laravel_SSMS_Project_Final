@@ -373,5 +373,12 @@
             icon.className = 'bi bi-eye';
         }
     }
+
+    // If page is restored from back-forward cache (bfcache), reload to ensure fresh CSRF token
+    window.addEventListener('pageshow', function (event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    });
 </script>
 @endsection

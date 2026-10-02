@@ -19,7 +19,11 @@ class StaffAuthController extends Controller
                 ? redirect()->route('admin.dashboard') 
                 : redirect()->route('stock.dashboard');
         }
-        return view('auth.staff-login');
+        return response()
+            ->view('auth.staff-login')
+            ->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
     }
 
     /**
@@ -37,9 +41,9 @@ class StaffAuthController extends Controller
             $staff = Auth::guard('staff')->user();
 
             if ($staff->isAdmin()) {
-                return redirect()->intended(route('admin.dashboard'))->with('success', 'Welcome, Administrator ' . $staff->UserName . '!');
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome, Administrator ' . $staff->UserName . '!');
             } else {
-                return redirect()->intended(route('stock.dashboard'))->with('success', 'Welcome, Stock Controller ' . $staff->UserName . '!');
+                return redirect()->route('stock.dashboard')->with('success', 'Welcome, Stock Controller ' . $staff->UserName . '!');
             }
         }
 
@@ -58,6 +62,10 @@ class StaffAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('staff.login')->with('info', 'Staff session signed out.');
+        return redirect()->route('staff.login')
+            ->with('info', 'Staff session signed out.')
+            ->header('Cache-Control', 'no-cache, no-store, max-age=0, must-revalidate')
+            ->header('Pragma', 'no-cache')
+            ->header('Expires', 'Sat, 01 Jan 1990 00:00:00 GMT');
     }
 }

@@ -614,13 +614,10 @@
 
         <!-- Sidebar Sign Out Footer -->
         <div class="p-3 border-top border-secondary border-opacity-10 mt-auto">
-            <form action="{{ route('staff.logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 rounded-pill py-2" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25);">
-                    <i class="bi bi-power"></i>
-                    <span class="fw-bold">Sign Out Session</span>
-                </button>
-            </form>
+            <a href="{{ route('staff.logout') }}" class="btn btn-sm w-100 d-flex align-items-center justify-content-center gap-2 rounded-pill py-2 text-decoration-none" style="background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25);">
+                <i class="bi bi-power"></i>
+                <span class="fw-bold">Sign Out Session</span>
+            </a>
         </div>
     </nav>
 
@@ -669,12 +666,9 @@
                         </li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form action="{{ route('staff.logout') }}" method="POST">
-                                @csrf
-                                <button type="submit" class="dropdown-item text-danger py-2 rounded-2 fw-semibold">
-                                    <i class="bi bi-box-arrow-right me-2"></i> Log Out
-                                </button>
-                            </form>
+                            <a href="{{ route('staff.logout') }}" class="dropdown-item text-danger py-2 rounded-2 fw-semibold">
+                                <i class="bi bi-box-arrow-right me-2"></i> Log Out
+                            </a>
                         </li>
                     </ul>
                 </div>
