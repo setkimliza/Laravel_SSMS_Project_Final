@@ -2,24 +2,27 @@
 
 > A role-based Supermarket Stock Management System & E-Commerce Storefront developed with **Laravel 12**, **MySQL**, and **Bootstrap 5**.
 
----
+👥 Default Login Accounts
+👑 Admin
+Username: admin
+Password: 123
+Access: Analytics, Staff Management, All Orders
 
-## 👥 Default Login Accounts
+📦 Stock Controller
+Username: stock
+Password: 123
+Access: Inventory, Categories, Expiry Alerts
 
-| Portal | URL | Username / Email | Password | Role |
-| :--- | :--- | :--- | :--- | :--- |
-| **Admin Portal** | `http://127.0.0.1:8000/staff/login` | `admin` | `123` | Full Admin (Analytics, Staff CRUD, All Orders) |
-| **Stock Portal** | `http://127.0.0.1:8000/staff/login` | `stock` | `123` | Stock Manager (Inventory, Categories, Expiry Alerts) |
-| **Customer Store** | `http://127.0.0.1:8000/login` | `john@example.com` | `123` | Customer Shopper (Catalog, Cart, Checkout, Orders) |
-| **Customer Store** | `http://127.0.0.1:8000/login` | `sarah@example.com` | `123` | Customer Shopper (Catalog, Cart, Checkout, Orders) |
-
----
+🛒 Customer
+Email: john@example.com
+Email: sarah@example.com
+Password: 123
+Access: Products, Cart, Checkout, Orders
 
 ## ⚡ Quick Setup & Running Locally
 
 Run the following commands in the project root directory:
 
-```bash
 # 1. Install PHP dependencies
 composer install
 
@@ -32,11 +35,9 @@ php artisan migrate:fresh --seed
 
 # 4. Start local development server
 php artisan serve
-```
 
 Access the application in your browser at: **`http://127.0.0.1:8000`**
 
----
 
 ## 🌟 Key Features
 
